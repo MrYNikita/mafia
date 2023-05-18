@@ -1,0 +1,12 @@
+{
+    "players": [
+        {
+            "name": "Tester",
+            "gender": true
+        },
+        {
+            "name": "Секси",
+            "gender": false
+        }
+    ]
+}

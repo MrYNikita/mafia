@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="stylesheet" href="styles/style.css">
+  <title>Мафия</title>
+</head>
+
+<body>
+  <bell-hop name="main">
+    <bell-point name="menu" root active>
+      <bell-button next="game">Game</bell-button>
+      <bell-button next="sets">Sets</bell-button>
+      <bell-button next="stat">Stat</bell-button>
+    </bell-point>
+    <bell-point name="game">
+      <bell-hop name="submain"></bell-hop>
+      <bell-point name="test">
+        <bell-button next="menu">Menu</bell-button>
+      </bell-point>
+      <bell-button next="test">Тест</bell-button>
+      <bell-button next="menu">Menu</bell-button>
+    </bell-point>
+    <bell-point name="stat">
+      <bell-button next="menu">Menu</bell-button>
+    </bell-point>
+    <bell-point name="sets">
+      <bell-button next="menu">Menu</bell-button>
+    </bell-point>
+  </bell-hop>
+  </main>
+  <header></header>
+  <footer></footer>
+  <script src="scripts/UI/lordel.js"></script>
+  <script src="scripts/UI/bellhop.js"></script>
+  <script src="scripts/UI/state-button.js"></script>
+  <script src="scripts/points/menu.js"></script>
+</body>
+
+</html>

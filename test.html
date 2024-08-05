@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Elements Slider</title>
+  <link rel="stylesheet" href="test.css">
+</head>
+
+<body>
+  <y-holder>
+    <y-inner>
+      <div>Содержимое 1</div>
+    </y-inner>
+    <y-inner>
+      <div>Содержимое 2</div>
+    </y-inner>
+    <y-inner>
+      <div>Содержимое 3</div>
+    </y-inner>
+  </y-holder>
+
+  <script>
+    // Определяем кастомный элемент y-inner
+    class YInner extends HTMLElement {
+      constructor() {
+        super();
+        // Создаем Shadow DOM
+        const shadow = this.attachShadow({ mode: 'open' });
+        shadow.innerHTML = `<slot></slot>`;
+      }
+    }
+
+    // Определяем кастомный элемент y-holder
+    class YHolder extends HTMLElement {
+      constructor() {
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+        shadow.innerHTML = `
+                    <style>
+                        :host {
+                            display: block;
+                            position: relative;
+                            overflow: hidden;
+                            width: 300px; /* Ширина контейнера */
+                            height: 200px; /* Высота контейнера */
+                        }
+                        ::slotted(y-inner) {
+                            display: none;
+                            width: 100%;
+                            height: 100%;
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                        }
+                        ::slotted(y-inner.active) {
+                            display: block;
+                        }
+                    </style>
+                    <slot></slot>
+                `;
+
+        this.currentIndex = 0;
+      }
+
+      connectedCallback() {
+        this.updateVisibility();
+        this.addEventListener('click', this.nextSlide.bind(this));
+      }
+
+      updateVisibility() {
+        const children = this.querySelectorAll('y-inner');
+        children.forEach((child, index) => {
+          if (index === this.currentIndex) {
+            child.classList.add('active');
+          } else {
+            child.classList.remove('active');
+          }
+        });
+      }
+
+      nextSlide() {
+        const children = this.querySelectorAll('y-inner');
+        this.currentIndex = (this.currentIndex + 1) % children.length;
+        this.updateVisibility();
+      }
+    }
+
+    // Регистрируем кастомные элементы
+    customElements.define('y-inner', YInner);
+    customElements.define('y-holder', YHolder);
+  </script>
+</body>
+
+</html>

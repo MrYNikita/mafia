@@ -1,0 +1,75 @@
+* {
+  & {
+    margin: 0;
+    padding: 0;
+
+    border: none;
+    outline: none;
+    background: none;
+    user-select: none;
+
+    color: #fff;
+    font-size: 1rem;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    text-anchor: middle;
+    letter-spacing: 2px;
+    text-decoration: none;
+  }
+}
+
+div,
+menu,
+body,
+html,
+form,
+main,
+header,
+footer,
+section,
+fieldset {
+  & {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+ul,
+div,
+nav,
+menu,
+form,
+header,
+footer,
+section,
+fieldset,
+fieldset {
+  & {
+    gap: 12px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+body {
+  & {
+    display: grid;
+    grid-template:
+    'h h h' 50px
+    '. m .' 1fr
+    'f f f' 50px / 1fr 3fr 1fr;
+    background-image: radial-gradient(circle at left, black 35%, red);
+  }
+}
+
+main {
+  & {
+    grid-area: m;
+  }
+}
+
+menu {
+  background-color: red;
+}

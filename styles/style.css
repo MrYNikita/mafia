@@ -60,7 +60,7 @@ body {
     'h h h' 50px
     '. m .' 1fr
     'f f f' 50px / 1fr 3fr 1fr;
-    background-image: radial-gradient(circle at left, black 35%, red);
+    background-image: linear-gradient(red, black);
   }
 }
 
@@ -70,6 +70,17 @@ main {
   }
 }
 
-menu {
-  background-color: red;
+bell-hop.main {
+  & {
+    width: 100%;
+    height: 100%;
+  }
+}
+bell-point.menu > menu {
+  & {
+    width: 300px;
+    height: 500px;
+    border-radius: 12px;
+    background-color: #1b1b1b;
+  }
 }

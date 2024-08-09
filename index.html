@@ -11,27 +11,12 @@
 </head>
 
 <body>
-  <bell-hop name="main">
-    <bell-point name="menu" root active>
-      <bell-button next="game">Game</bell-button>
-      <bell-button next="sets">Sets</bell-button>
-      <bell-button next="stat">Stat</bell-button>
-    </bell-point>
-    <bell-point name="game">
-      <bell-hop name="submain"></bell-hop>
-      <bell-point name="test">
-        <bell-button next="menu">Menu</bell-button>
+  <main>
+    <bell-hop class="main" name="main">
+      <bell-point class="menu" root active>
+        <menu></menu>
       </bell-point>
-      <bell-button next="test">Тест</bell-button>
-      <bell-button next="menu">Menu</bell-button>
-    </bell-point>
-    <bell-point name="stat">
-      <bell-button next="menu">Menu</bell-button>
-    </bell-point>
-    <bell-point name="sets">
-      <bell-button next="menu">Menu</bell-button>
-    </bell-point>
-  </bell-hop>
+    </bell-hop>
   </main>
   <header></header>
   <footer></footer>

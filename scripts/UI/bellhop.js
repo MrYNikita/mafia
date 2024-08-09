@@ -1,3 +1,49 @@
+class BellhopHandler {
+
+  /**
+   * @arg {BellhopHandler} args
+  */
+  constructor(args = {}) {
+
+    const {
+
+      name,
+      action,
+      priority,
+      condition,
+
+    } = args;
+
+    this.name = name;
+    this.action = action;
+    this.priority = priority;
+    this.condition = condition;
+
+  };
+
+  /**
+   * @type {string?}
+  */
+  name;
+  /**
+   * @type {(self:HTMLBellhopPointElement, prev:HTMLBellhopPointElement) => void}
+  */
+  action;
+  /**
+   * @type {number?}
+  */
+  priority;
+  /**
+   * @type {(self:HTMLBellhopPointElement, prev:HTMLBellhopPointElement) => boolean}
+  */
+  condition;
+  /**
+   * @type {boolean}
+  */
+  disposable;
+
+};
+
 class HTMLBellhopButtonElement extends HTMLElement {
 
   static tag = 'bell-button';
@@ -16,7 +62,7 @@ class HTMLBellhopButtonElement extends HTMLElement {
     });
 
     this.addEventListener('click', e => {
-      this.getPointNext().activate();
+      this.getPointNext().activate(this.getPoint());
     });
 
   };
@@ -68,6 +114,17 @@ class HTMLBellhopPointElement extends HTMLElement {
 
   static tag = 'bell-point';
 
+  /**
+   * @type {BellhopHandler[]}
+   * @protected
+  */
+  _handlersActivate = [];
+  /**
+   * @type {BellhopHandler[]}
+   * @protected
+  */
+  _handlersDeactivate = [];
+
   constructor() {
 
     super();
@@ -80,6 +137,23 @@ class HTMLBellhopPointElement extends HTMLElement {
       type: 'slot',
       parent: shadow,
     });
+  };
+
+  /**
+   * @arg {HTMLBellhopPointElement} point
+   * @arg {...BellhopHandler} handlers
+  */
+  _handle(point, ...handlers) {
+    const nexts = [];
+    for (const handler of handlers) {
+      if (handler?.condition?.(this, point) || !handler.condition) {
+        handler.action(this, point);
+        if (!handler.disposable) {
+          nexts.push(handler);
+        };
+      };
+    };
+    return nexts;
   };
 
   getName() {
@@ -105,12 +179,20 @@ class HTMLBellhopPointElement extends HTMLElement {
     return this;
   };
 
-  activate() {
-    this.getBellhop().deactivate();
+  /**
+   * @arg {HTMLBellhopPointElement?} prev
+  */
+  activate(prev) {
+    this._handlersActivate = this._handle(prev, ...this._handlersActivate);
+    prev.deactivate();
     this.setAttribute('active', '');
     return this;
   };
-  deactivate() {
+  /**
+   * @arg {HTMLBellhopPointElement?} next
+  */
+  deactivate(next) {
+    this._handlersDeactivate = this._handle(next, ...this._handlersDeactivate);
     this.removeAttribute('active');
     return this;
   };
@@ -120,12 +202,14 @@ customElements.define(HTMLBellhopPointElement.tag, HTMLBellhopPointElement);
 
 class HTMLBellhopElement extends HTMLElement {
 
+  static tag = 'bell-hop';
+
   static {
     createElem({
       type: 'style',
       parent: document.head,
       text: `
-        bell-hop {
+        ${HTMLBellhopElement.tag} {
           & {
             width: 100%;
             height: 100%;
@@ -134,11 +218,14 @@ class HTMLBellhopElement extends HTMLElement {
             align-items: center;
             justify-content: center;
           }
-          & bell-point {
+          & ${HTMLBellhopPointElement.tag} {
             & {
               width: 100%;
               height: 100%;
               display: flex;
+              flex-flow: column;
+              align-items: center;
+              justify-content: center;
             }
             &[active] {
               & > bell-point {
@@ -149,7 +236,7 @@ class HTMLBellhopElement extends HTMLElement {
               display: none;
             }
             &:not([active]):has([active]) {
-              & > :not(bell-point) {
+              & > :not(${HTMLBellhopPointElement.tag}) {
                 display: none;
               }
             }
@@ -158,8 +245,6 @@ class HTMLBellhopElement extends HTMLElement {
       `,
     });
   };
-
-  static tag = 'bell-hop';
 
   constructor() {
 
